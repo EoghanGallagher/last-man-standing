@@ -11,22 +11,12 @@
 |
 */
 
-Route::get('/', function ()
-{
-    return view('welcome');
-});
 
-
-Route::get( 'hello' , function()
-{
-
-    echo 'Hello World';
-
-});
-
-
-
-Route::get( 'home' , 'PagesController@home' );
+/*
+Route::get( 'home' , [
+    'middleware' => 'auth',
+    'uses' => 'PagesController@home'
+]);*/
 
 // Authentication routes...
 Route::get('auth/login', 'Auth\AuthController@getLogin');
@@ -36,3 +26,27 @@ Route::get('auth/logout', 'Auth\AuthController@getLogout');
 // Registration routes...
 Route::get('auth/register', 'Auth\AuthController@getRegister');
 Route::post('auth/register', 'Auth\AuthController@postRegister');
+
+// Fixtures Route
+Route::get( 'fixtures' , 'PagesController@Fixtures' );
+
+//Team Selection Route
+//Route::get('matches', 'PagesController@TeamSelectionScreen');
+
+Route::get('matches', ['middleware' => 'auth', 'uses' => 'PagesController@TeamSelectionScreen']);
+
+
+
+Route::get('/teams', 'PlayersController@TeamList');
+
+Route::post( 'playerpicks' , 'PlayersController@PlayerPicks' );
+
+
+Route::get('token', function ()
+{
+    return csrf_token();
+});
+
+
+
+
