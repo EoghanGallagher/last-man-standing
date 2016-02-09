@@ -9,6 +9,9 @@
 
     <link href="{{ asset('/css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('/css/styles.css') }}" rel="stylesheet">
+
+    <script src="sweet/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="sweet/dist/sweetalert.css">
     <!-- Main CSS -->
 
 

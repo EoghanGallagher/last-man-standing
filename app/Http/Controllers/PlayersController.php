@@ -55,14 +55,14 @@ trait PlayerSelectionTraits
         if( count( $result )  > 0 )
         {
 
-            echo 'RESULT FOUND';
+
 
             return true;
 
         }
         else
         {
-            echo 'NO RESULT FOUND';
+
 
             return false;
 
@@ -109,6 +109,8 @@ class PlayersController extends Controller
     {
 
 
+        $msg = '';
+        $error = false;
         $currentDate = date( "Y-m-d h:i:sa" );
 
 
@@ -120,6 +122,15 @@ class PlayersController extends Controller
         {
             $id = $request->user_id;
         }
+        else
+        {
+            $msg = 'User ID Not Set';
+            $error = true;
+
+            $result = array( $msg , $error );
+
+            return json_encode( $result );
+        }
 
         if( $request->has( 'match_id' ) )
         {
@@ -128,11 +139,31 @@ class PlayersController extends Controller
 
 
         }
+        else
+        {
+            $msg = 'Match ID Not Set';
+            $error = true;
+
+            $result = array( 'msg'=>$msg , 'error'=>$error );
+
+            return json_encode( $result );
 
 
-        if ($request->has('player_selection'))
+        }
+
+
+        if ( $request->has('player_selection') )
         {
             $player_selection = $request->player_selection;
+        }
+        else
+        {
+            $msg = 'No Team Selected';
+            $error = true;
+
+            $result = array( 'msg'=>$msg , 'error'=>$error );
+
+            return json_encode( $result );
         }
 
 
@@ -147,18 +178,39 @@ class PlayersController extends Controller
                 ->where( 'match_day', $this->match_day )
                 ->update( [ 'match' => $match_id , 'team_name' => $player_selection , 'updated_at' => $currentDate ] );
 
+
+            $msg = 'Your selection has been saved';
+            $error = true;
+
+            $result = array( 'msg'=>$msg , 'error'=>$error );
+
+            return json_encode( $result );
+
         }
         else
         {
-            //New Pick Add record to DB
-            echo 'Player with Id ' . $id . ' chose ' . $player_selection;
+
 
             DB::table('player_picks')->insertGetId(
 
                 ['user_id' => $id, 'match' => $match_id,  'match_day' => $this->match_day, 'team_name' => $player_selection ,  'created_at' => $currentDate ]
             );
+
+            $msg = 'Your selection has been saved';
+            $error = true;
+
+            $result = array( 'msg'=>$msg , 'error'=>$error );
+
+            return json_encode( $result );
         }
 
     }
+
+    public function GetPlayerPick()
+    {
+        
+    }
+
+
 
 }

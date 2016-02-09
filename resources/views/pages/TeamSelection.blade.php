@@ -20,6 +20,9 @@ $encrypted_token = $encrypter->encrypt(csrf_token());
 
 
     <link href="/css/style.css" rel="stylesheet" />
+    <script src="sweet/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="sweet/dist/sweetalert.css">
+
 
     <title>Team Selection</title>
 </head>
@@ -30,7 +33,9 @@ $encrypted_token = $encrypter->encrypt(csrf_token());
     <h1> Game Week  <span id="matchDay"></span> </h1>
 
     <h3>Current Date: {{ Carbon::today() }} </h3>
-    <h3>Deadline: <span id="deadLine"> {{ Auth::user()->name }}</span></h3>
+    <h3>User: <span id="deadLine"> {{ Auth::user()->name }}</span></h3>
+
+    <h4>Current Team:  <span id="current_selection"> </span></h4>
     <input type="hidden" value="{{ Auth::user()->id }}" id="user"/>
     <div class="row">
         <br/>
@@ -109,7 +114,10 @@ $encrypted_token = $encrypter->encrypt(csrf_token());
             playerSelection = $( this ).text();
             matchId = $( this ).val();
 
-            $( this).focus();
+            $( this ).focus();
+
+            $( '#current_selection').html( playerSelection );
+
 
         });
 
@@ -118,11 +126,7 @@ $encrypted_token = $encrypter->encrypt(csrf_token());
         $( '#fixtures-container' ).on( "click", '#save-btn', function()
         {
 
-
-
             var user_id = $( '#user' ).val();
-
-
 
             var selectedTeam = playerSelection;
             var currentMatch = matchId;
@@ -149,7 +153,19 @@ $encrypted_token = $encrypter->encrypt(csrf_token());
 
                     success: function ( data )
                     {
-                        console.log( data );
+                        var res =  JSON.parse( data );
+                        var msg = '';
+
+                        if( res.error )
+                        {
+                            msg = res.msg;
+                        }
+                        else
+                        {
+                            msg = res.msg;
+                        }
+
+                        swal( msg );
                     }
 
 
@@ -158,7 +174,7 @@ $encrypted_token = $encrypter->encrypt(csrf_token());
             }
             else
             {
-                alert( 'Dickhead Player has not selected a Team' );
+                swal( 'Please select a Team' );
             }
 
 
