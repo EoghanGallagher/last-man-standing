@@ -1,52 +1,74 @@
+@extends('app')
 
-<!DOCTYPE html>
-<html>
-    <head>
+@section('content')
 
+    <br/>
+    <br/>
 
-        <title>Login Form - Authentication</title>
+    <div class="container-fluid">
+        <div class ="row" >
+            <div class="col-md-8 col-md-offset-2">
 
-        <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
-        <link href="/css/style.css" rel="stylesheet" />
+            <div>
+                <img id="logo" src="/img/logo.png">
+            </div>
 
-    </head>
-    <body>
-
-        <!-- resources/views/auth/login.blade.php -->
-        <div style="border:solid; border-width:thin; border-color:silver; margin-bottom:10px width:100%">
-            <form method="POST" action="/auth/login">
-                {!! csrf_field() !!}
-
-                <div>
-                    Email
-                    <input type="email" name="email" value="{{ old('email') }}">
-                </div>
-
-                <div>
-                    Password
-                    <input type="password" name="password" id="password">
-                </div>
-
-                <div>
-                    <input type="checkbox" name="remember"> Remember Me
-                </div>
-
-                <div>
-                    <button type="submit">Login</button>
-                </div>
-            </form>
+            </div>
         </div>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Login</div>
+                    <div class="panel-body">
+                        @if (count($errors) > 0)
+                            <div class="alert alert-danger">
+                                <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
 
-        <!-- JAVASCRIPT FILES PLACED AT THE BOTTOM TO REDUCE THE LOADING TIME  -->
-        <!-- CORE JQUERY  -->
-        <!-- Bootstrap CDN -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+                        <form class="form-horizontal" role="form" method="POST" action="{{ url('/auth/login') }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">E-Mail Address</label>
+                                <div class="col-md-6">
+                                    <input type="email" class="form-control" name="email" value="{{ old('email') }}">
+                                </div>
+                            </div>
 
-        <!-- Jquery CDN -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Password</label>
+                                <div class="col-md-6">
+                                    <input type="password" class="form-control" name="password">
+                                </div>
+                            </div>
 
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-4">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="remember"> Remember Me
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
 
-    </body>
-</html>
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-4">
+                                    <button type="submit" class="btn btn-primary">Login</button>
+
+                                    <a class="btn btn-link" href="{{ url('/password/email') }}">Forgot Your Password?</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

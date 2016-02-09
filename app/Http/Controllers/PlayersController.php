@@ -10,7 +10,7 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+//use Illuminate\Routing\Controller;
 
 use DB;
 
@@ -85,16 +85,23 @@ class PlayersController extends Controller
     public function TeamList()
     {
 
-
         $this->match_day = $this->GetMatchDay();
 
         // echo  json_encode ( $match_day );
 
+
         $result = DB::table( 'fixtures' )->select( 'match', 'home_team_name' , 'away_team_name' )
             ->where( 'match_day' , $this->match_day )->get();
 
+       if( !$result )
+       {
+           return false;
+       }
 
-        echo json_encode( $result );
+
+        $response = array( 'result'=>$result , 'match_day'=>$this->match_day  );
+
+        echo json_encode( $response );
 
     }
 

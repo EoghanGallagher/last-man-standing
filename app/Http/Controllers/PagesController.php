@@ -50,7 +50,6 @@ class PagesController extends Controller
             if( count( $rows ) > 0 )
             {
 
-
                 foreach( $fixtures as &$fixture )
                 {
                     $count++;
@@ -58,9 +57,6 @@ class PagesController extends Controller
                     DB::table('fixtures')
                         ->where( 'id', $count )
                         ->update( [ 'date' => $fixture[ 'date' ] , 'status'=> $fixture[ 'status' ] ] );
-
-
-
 
                 }
 

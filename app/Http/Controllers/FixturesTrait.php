@@ -21,17 +21,31 @@ trait FixturesTrait
 
 
 
-        //$current_date = Date( 'y-m-d' );
+        $current_date = Date( 'Y-m-d' );
 
-        $current_date = '2015-11-07';
+        //$current_date = '2015-11-07';
 
-        //echo $current_date . '<BR>';
-
-
-        $match_day = DB::table( 'fixtures' )->where( 'date',  $current_date )->pluck('match_day');
+        // $match_day = DB::table( 'fixtures' )->where( 'date', '>=' , $current_date )->pluck( 'match_day' );
 
 
-        return $match_day;
+        $match_day = DB::table( 'fixtures' )->select( 'match_day' )
+            ->where( 'date' , '>=' , $current_date  )
+            ->orderby( 'match_day' , 'asc' )
+            ->take( 1 )
+            ->get();
+
+
+
+        if( $match_day )
+        {
+            return $match_day[0]->match_day;
+        }
+        else
+        {
+            return false;
+        }
+
+
 
     }
 

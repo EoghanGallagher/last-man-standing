@@ -1,4 +1,8 @@
 <?php
+
+use Carbon\Carbon;
+
+
 $encrypter = app('Illuminate\Encryption\Encrypter');
 $encrypted_token = $encrypter->encrypt(csrf_token());
 ?>
@@ -23,10 +27,11 @@ $encrypted_token = $encrypter->encrypt(csrf_token());
 
 
 <div class="container text-center">
-    <h1> Game Week <span id="matchDay"></span> </h1>
+    <h1> Game Week  <span id="matchDay"></span> </h1>
 
-    <h3>Deadline: <span id="deadLine">Date Goes here</span></h3>
-
+    <h3>Current Date: {{ Carbon::today() }} </h3>
+    <h3>Deadline: <span id="deadLine"> {{ Auth::user()->name }}</span></h3>
+    <input type="hidden" value="{{ Auth::user()->id }}" id="user"/>
     <div class="row">
         <br/>
         <div class="col-md-6 col-md-offset-3 col-sm-12  ">
@@ -113,7 +118,11 @@ $encrypted_token = $encrypter->encrypt(csrf_token());
         $( '#fixtures-container' ).on( "click", '#save-btn', function()
         {
 
-            var user_id = 1;
+
+
+            var user_id = $( '#user' ).val();
+
+
 
             var selectedTeam = playerSelection;
             var currentMatch = matchId;
@@ -124,7 +133,7 @@ $encrypted_token = $encrypter->encrypt(csrf_token());
 
                 $.ajax({
 
-                    url: "http://localhost:8889/playerpicks",
+                    url: "/playerpicks",
                     type: "POST",
                         beforeSend: function (xhr)
                         {
@@ -169,12 +178,11 @@ $encrypted_token = $encrypter->encrypt(csrf_token());
 
         $( '#fixtures-container').append( '<br/>' );
 
-
         $.ajax({
 
 
             type: "GET",
-            url: "http://localhost:8889/teams",
+            url: "/teams",
             cache: false,
             contentType: "application/json",
             dataType: "json",
@@ -182,14 +190,14 @@ $encrypted_token = $encrypter->encrypt(csrf_token());
             success: function ( data )
             {
 
-                // console.log( data );
+
+                $('#matchDay').html( data['match_day'] );
 
 
-                $.each( data , function ( index )
+                $.each( data['result'] , function ( index )
                 {
 
-
-                    content = '<div class="fixtures-div" align="center"><button type="button" class="btn btn-default custom-button" value="' + data[index].match + '">' +  data[index].home_team_name   + '</button>  <span>VS</span>  <button type="button"  class="btn btn-default custom-button" value="' + data[index].match + '">'+   data[index].away_team_name +'</button> </div>';
+                    content = '<div class="fixtures-div" align="center"><button type="button" class="btn btn-default custom-button" value="' + data['result'][index].match + '">' +  data['result'][index].home_team_name   + '</button>  <span>VS</span>  <button type="button"  class="btn btn-default custom-button" value="' + data['result'][index].match + '">'+   data['result'][index].away_team_name +'</button> </div>';
 
                     $( '#fixtures-container').append( content );
 

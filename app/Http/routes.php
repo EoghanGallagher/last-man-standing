@@ -12,16 +12,26 @@
 */
 
 
-/*
-Route::get( 'home' , [
+
+/*Route::get( 'home' , [
     'middleware' => 'auth',
     'uses' => 'PagesController@home'
 ]);*/
+
+Route::get('/',  ['middleware' => 'auth', 'uses' => 'PagesController@TeamSelectionScreen']);
+Route::get('home', ['middleware' => 'auth', 'uses' => 'PagesController@TeamSelectionScreen']);
 
 // Authentication routes...
 Route::get('auth/login', 'Auth\AuthController@getLogin');
 Route::post('auth/login', 'Auth\AuthController@postLogin');
 Route::get('auth/logout', 'Auth\AuthController@getLogout');
+
+/* User Authentication */
+
+Route::controllers([
+    'auth' => 'Auth\AuthController',
+    'password' => 'Auth\PasswordController',
+]);
 
 // Registration routes...
 Route::get('auth/register', 'Auth\AuthController@getRegister');
@@ -34,7 +44,6 @@ Route::get( 'fixtures' , 'PagesController@Fixtures' );
 //Route::get('matches', 'PagesController@TeamSelectionScreen');
 
 Route::get('matches', ['middleware' => 'auth', 'uses' => 'PagesController@TeamSelectionScreen']);
-
 
 
 Route::get('/teams', 'PlayersController@TeamList');
